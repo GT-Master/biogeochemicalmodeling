@@ -1,0 +1,52 @@
+TITLE 1 mM SOM4 first order decay 
+      CLM-CN SOM4 -> CO2 + 0.08575 NH3
+      CN ratio for SOM4 is 10 gC/gN * 12.0111 / 14.0067 = 0.08575       
+RATES
+
+  SOM4_decomposition
+    -start
+      10 k     = 1.0/27.4/365.0/24.0/3600.0   # rate coefficient
+      20 rate  = k * m 
+      30 moles = rate * TIME
+      40 SAVE moles
+    -end
+
+SOLUTION 1
+
+KINETICS
+
+  SOM4_decomposition
+    -M0 1.0e-3                                 # initial concentration 1 mmol/L
+    -FORMULA CO2 1.0 NH4 0.085714 OH 0.085714     
+
+  -STEPS 3.1536e9 IN 100 STEPS                 # 100 * 365 * 24 * 3600 = 3.1536e-9 s
+
+  INCREMENTAL_REACTIONS TRUE
+
+PRINT
+  -RESET FALSE
+
+USER_GRAPH
+  -HEADING Time SOM4 CO2 NH3
+  -AXIS_TITLES Time(y) SOM4(mM) CO2(mM) NH3(mM)
+  -INITIAL_SOLUTIONS FALSE
+  -START
+    10 GRAPH_X SIM_TIME/3600.0 / 24.0 / 365.0
+    20 GRAPH_Y KIN('SOM4_decomposition') * 1000.0  TOT('C(4)')*1000.0 TOT('N(-3)')*1000.0 
+  -END
+
+SELECTED_OUTPUT
+  -file ex2som4.txt
+  -reset false
+
+USER_PUNCH
+  -START
+  -HEADING Time(y) SOM4(mM) CO2(mM) NH3(mM)
+    10 PUNCH SIM_TIME / 3600.0 / 24.0 / 365.0
+    20 PUNCH KIN('SOM4_decomposition') * 1000.0 
+    30 PUNCH TOT('C(4)') * 1000.0
+    40 PUNCH TOT('N(-3)') * 1000.0
+  -END
+END
+
+
