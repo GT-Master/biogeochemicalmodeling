@@ -1,0 +1,15 @@
+Install phreeqc on a Windows computer (my trial 1/25/2016)
+   Download phreeqc from http://wwwbrr.cr.usgs.gov/projects/GWC_coupled/phreeqc/
+     I selected Batch Versions of PHREEQC, Windows, 64-bit processor, phreeqc-3.3.3-10424-x64.msi
+     It is in C:\Program Files\USGS\phreeqc-3.3.3-10424-x64 once installed
+   
+   To run it, I open Command Prompt
+      change the directory  
+      "C:\Program Files\USGS\phreeqc-3.3.3-10424-x64\bin\phreeqc.bat" ex1som4.phrq
+      It shows a figure after it finishes
+
+I believe installation on Mac Os is a bit easier. Just download phreeqc-3.3.3-10424.dmg, run it. I have the following in my .bash_profile under my home directory 
+
+export PATH="/Users/t6g/Applications/phreeqc-3.1.3-8914/bin:$PATH"
+export PHREEQC_DATABASE=/Users/t6g/Applications/phreeqc-3.1.3-8914/database/phreeqc.dat
+
