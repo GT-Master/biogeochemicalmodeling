@@ -5,7 +5,7 @@ RATES
 
   SOM4_decomposition
     -start
-      10 k     = 1.0/27.4/365.0/24.0/3600.0   # rate coefficient
+      10 k     = 1.0/PARM(1)/365.0/24.0/3600.0   # rate coefficient
       20 rate  = k * m 
       30 moles = rate * TIME
       40 SAVE moles
@@ -17,6 +17,7 @@ KINETICS
 
   SOM4_decomposition
     -M0 1.0e-3                                 # initial concentration 1 mmol/L
+    -PARMS 27.4                                # turnover time 27.4 y
     -FORMULA CO2 1.0 NH4 0.085714 OH 0.085714     
 
   -STEPS 3.1536e9 IN 100 STEPS                 # 100 * 365 * 24 * 3600 = 3.1536e-9 s
