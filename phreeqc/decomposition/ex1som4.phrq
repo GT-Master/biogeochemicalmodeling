@@ -1,12 +1,12 @@
 TITLE 1 mM SOM4 first order decay 
-      CLM-CN SOM4 -> CO2 turnover time 27.4 year
+      CLM-CN SOM4 -> turnover time 27.4 year
 
 RATES
 
-  SOM4_decomposition
+  SOM4
     -start
       10 k     = 1.0/27.4/365.0/24.0/3600.0   # rate coefficient
-      20 rate  = k * m 
+      20 rate  = k * (m - 1.0e-15) 
       30 moles = rate * TIME
       40 SAVE moles
     -end
@@ -15,7 +15,7 @@ SOLUTION 1
 
 KINETICS
 
-  SOM4_decomposition
+  SOM4
     -M0 1.0e-3                                 # initial concentration 1 mmol/L
     -FORMULA C 0.0    
 
@@ -32,18 +32,19 @@ USER_GRAPH
   -INITIAL_SOLUTIONS FALSE
   -START
     10 GRAPH_X SIM_TIME/3600.0 / 24.0 / 365.0
-    20 GRAPH_Y KIN('SOM4_decomposition') * 1000.0  # M to mM 
+    20 GRAPH_Y KIN('SOM4') * 1000.0  # M to mM 
   -END
 
 SELECTED_OUTPUT
   -file ex1som4.txt
   -reset false
+  -high_precision
 
 USER_PUNCH
   -START
   -HEADING Time(y) SOM4(mM)
   10 PUNCH SIM_TIME / 3600.0 / 24.0 / 365.0
-  20 PUNCH KIN('SOM4_decomposition') * 1000.0 
+  20 PUNCH KIN('SOM4') * 1000.0 
   -END
 END
 
