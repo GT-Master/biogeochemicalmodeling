@@ -1,0 +1,75 @@
+DATABASE redox.dat
+TITLE simulate sulfate reduction example in Bethke 2007
+
+PHASES
+redoxiMackinawite
+    FerrousSulfide + H+ = Ferrous+2 + HSulfide-
+    log_k     -3.6
+
+solution 1
+pH     7.2
+Na     500.0 charge
+Cl     500.0
+Ca      20.0
+Sulfate 20.0  
+Ferrous  2.0
+C(4)     2.0
+Acetate  1.0
+ 
+equilibrium_phases 1
+redoxMackinawite 0.0 0.0
+
+RATES
+Sulfatereduction
+ -start
+ # biomass unit mol, 1e-9 mol/mg/s * 113 g/mol * 1000 mg/g = 1.13e-4 1/s
+ 10 k = 1.13e-4  
+ 20 donor = mol("Acetate-") /(7.0e-5 + mol("Acetate-"))
+ 30 logQ = 2.0 * la("HCO3-") + la("HSulfide-") - la("Acetate-") - la("SulfateO4-2")
+ 40 QK = 10^((logQ - 8.404)/5.0)
+ 50 FT = 1.0 - QK * exp(9.0/2.4789)
+ 60 put(FT, 1)
+ 70 rate = k * kin('Sulfatereducer') * donor * FT
+ 80 x = rate * 3600.0 * 24.0 * 1000.0   #unit change to mmol/day
+ 90 put(x, 2)
+ 95 put(rate, 3)
+100 save -rate * time
+-end
+
+Sulfatereducer
+-start
+ 10 rxnrate = get(3)
+ 20 rate = rxnrate * 4.3 / 113.0 - 1.0e-7 * m 
+ 30 save -rate * time
+-end 
+
+KINETICS
+-cvode
+
+Sulfatereduction
+ -m0 0.0
+ -formula Acetate 1.0 SulfateO4 1.0 HCO3 -2.0 HSulfide -1.0
+ 
+Sulfatereducer
+ -m0 8.85e-7 # 0.1 mg/L /113000 (mg/mol)
+ -formula CH2O 0.0 
+ 
+ -steps 1.728e6 in 560 steps
+ 
+INCREMENTAL_REACTIONS true
+ 
+SELECTED_OUTPUT
+-file ex3a.txt
+-reset false
+USER_PUNCH
+-headings Time(day) pH Acetate(mM) Sulfate(mM) SRB(uM) FT Rate(mM/day)
+-start
+10 punch Total_time/3600/24
+20 punch -la('H+')
+30 punch tot('Acetate')*1e3
+40 punch tot('Sulfate')*1e3
+50 punch kin('Sulfatereducer')*1e3*113.0
+60 punch get(1)
+70 punch get(2)
+-end
+END

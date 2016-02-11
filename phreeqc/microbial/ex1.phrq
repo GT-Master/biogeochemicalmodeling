@@ -1,0 +1,39 @@
+database redox.dat
+solution 1
+pH      7.0
+Na    100.0
+Sulfate 1.5  
+Acetate 1.0
+Cl    100.0 charge
+ 
+RATES
+Sulfatereduction
+ -start
+ 10 k = 1.0e-9
+ 20 donor = tot("Acetate") /(5.0e-6 + tot("Acetate"))
+ 30 acceptor = tot("Sulfate") /(3.9e-5 + tot("Sulfate"))
+ 40 rate = k * donor * acceptor
+ 50 save -rate * time
+-end
+
+KINETICS
+-cvode
+ 
+Sulfatereduction
+ -m0 0.0 
+ -formula Acetate 1.0 SulfateO4 1.0 HCO3 -2.0 HSulfide -1.0 
+ -steps 1.728e6 in 280 steps
+ 
+INCREMENTAL_REACTIONS true
+ 
+SELECTED_OUTPUT
+-file ex1.txt
+-simulation false
+-state false
+-solution false
+-pH true 
+-pe false
+-step false
+-distance false
+-totals Acetate Sulfate Sulfide 
+END

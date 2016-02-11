@@ -1,0 +1,87 @@
+database redox.dat
+PHASES
+redoxiMackinawite
+    FerrousSulfide + H+ = Ferrous+2 + HSulfide-
+    log_k     -3.6
+
+SRA
+C5H7O2Amm + 3 H2O + 44.9044 HCO3- + 22.4522 HSulfide- = 1.5000 H+ + 1.0000 AmmH4+ + 22.4522 SulfateO4-2 + 24.9522 Acetate-
+log_k = -137.8700
+-no_check
+
+solution 1
+pH     7.2
+Na     500.0 charge
+Cl     500.0
+Ca      20.0
+Sulfate 20.0  
+Ferrous  2.0
+C(4)     2.0
+Acetate  1.0
+Amm      1.0e-3
+ 
+equilibrium_phases 1
+redoxMackinawite 0.0 0.0
+
+RATES
+SRAk
+ -start
+ 10 if(SI("SRA") < 0.0) then rate = 0.0
+ 20 k = parm(1)
+ 30 donor = mol("Acetate-") /(parm(2) + mol("Acetate-"))
+ 40 acceptor = mol("SulfateO4-2") /(parm(3) + mol("SulfateO4-2"))
+ 50 inhibitor = parm(4)/(parm(4) + tot("Nitrate"))
+ 60 x = kin("SRAb")
+ 70 rate = - k * donor * acceptor * inhibitor * x 
+ 80 put(rate, 1)
+ 90 save rate * time
+ -end
+
+SRAd
+ -start
+ 30 rate = parm(1) * kin("SRAb")
+ 40 put(rate, 2)
+ 50 save rate * time
+ -end
+
+SRAb
+ -start
+ 30 rate = get(1) + get(2)
+ 50 save rate * time
+ -end
+
+KINETICS
+-cvode
+SRAk
+ -m0 0.0
+ -formula H2O -3.0 HSulfide -22.4522 HCO3 -44.9044 H 1.5 SulfateO4 22.4522 Acetate 24.9522
+ -parms 4.00E-6 5.0E-6 3.9E-5 1.0E-6
+
+SRAd
+ -m0 0.0
+ -formula H2CO3 -5.0                                   #C5H7O2N -> 5 H2CO3   
+ -parms 1.0E-7
+
+SRAb
+ -m0 8.84E-7
+ -formula C5H7O2Amm 0.0 
+
+ -steps 1.728e6 in 560 steps
+ 
+INCREMENTAL_REACTIONS true
+ 
+SELECTED_OUTPUT
+-file ex4a.txt
+-reset false
+USER_PUNCH
+-headings Time(day) pH Acetate(mM) Sulfate(mM) SRB(uM) SI_SRA Rate(mM/day)
+-start
+10 punch Total_time/3600/24
+20 punch -la('H+')
+30 punch tot('Acetate')*1e3
+40 punch tot('Sulfate')*1e3
+50 punch kin('SRAb')*1e3*113.0
+60 punch si('SRA')
+70 punch -get(1)*3600.0*24.0*1000.0
+-end
+END
