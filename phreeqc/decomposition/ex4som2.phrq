@@ -1,0 +1,114 @@
+TITLE 1 mM SOM3 decay in CLM-CN reactin network 
+           CN     NC    turnover 
+      SOM2 12  0.07146  71.0 d    
+      SOM3 10  0.08575   2.0 y     
+      SOM4 10  0.08575  27.4 y     
+      Stoich coefficient for NH3 is 0.07146 - 0.54*0.08575 = 0.025155
+      SOM2 -> 0.46 CO2 + 0.54 SOM3 + 0.025155 NH3  
+      Stoich coefficient for NH3 is 0.08575 * 0.55 = 0.04716
+      SOM3 -> 0.55 CO2 + 0.45 SOM4 + 0.04716 NH3  
+      Stoich coefficient for NH3 is 0.08575 * 1.00 = 0.08575
+      SOM4 -> CO2 + 0.08575 NH3
+
+RATES
+
+  SOM2
+    -start
+      10 k     = 1.0/PARM(1)/365.0/24.0/3600.0    # rate coefficient (71 d turnover time)
+      20 rate  = k * (m - 1.0e-15) 
+      30 moles = rate * TIME
+      40 SAVE moles
+      50 som3production = moles * (1.0 - PARM(2)) # PARM(2) is respiration factor
+      60 PUT(som3production, 1)
+    -end
+
+  SOM3_decomposition
+    -start
+      10 k     = 1.0/PARM(1)/365.0/24.0/3600.0    # rate coefficient (2 y turnover time)
+      20 rate  = k * (KIN('SOM3') - 1.0e-15) 
+      30 moles = rate * TIME
+      35 PUT(moles, 2)
+      40 SAVE moles
+      50 som4production = moles * (1.0 - PARM(2)) # PARM(2) is respiration factor
+      60 PUT(som4production, 3)
+    -end
+
+  SOM3
+    -start
+      10 moles = GET(2) - GET(1) 
+      20 SAVE moles
+    -end
+
+  SOM4_decomposition
+    -start
+      10 k     = 1.0/PARM(1)/365.0/24.0/3600.0   # rate coefficient (27.4 y turnover time)
+      20 rate  = k * (KIN('SOM4') - 1.0e-15) 
+      30 moles = rate * TIME
+      40 SAVE moles
+      50 PUT(moles, 4)
+    -end
+
+  SOM4
+    -start
+      10 moles = GET(4) - GET(3) 
+      20 SAVE moles
+    -end
+
+SOLUTION 1
+
+KINETICS
+
+  SOM2
+    -M0 1.0e-3                                 # initial concentration 1 mmol/L
+    -PARMS 0.1945 0.46                         # turnover time 2 y, respiration factor 0.55
+    -FORMULA CO2 0.46 NH4 0.025155 OH 0.025155     
+
+  SOM3_decomposition
+    -PARMS 2.0 0.55                            # turnover time 2 y, respiration factor 0.55
+    -FORMULA CO2 0.55 NH4 0.04716 OH 0.04716     
+
+  SOM3
+    -M0 1.0e-15
+    -FORMULA CO2 0.0
+
+  SOM4_decomposition
+    -PARMS 27.4                                # turnover time 27.4 y
+    -FORMULA CO2 1.0 NH4 0.085714 OH 0.085714     
+
+  SOM4
+    -M0 1.0e-15
+    -FORMULA CO2 0.0
+
+  -STEPS 3.1536e7 IN 200 STEPS                 # 1 * 365 * 24 * 3600 = 3.1536e-7 s
+
+  INCREMENTAL_REACTIONS TRUE
+
+PRINT
+  -RESET FALSE
+
+USER_GRAPH
+  -HEADING Time SOM2 SOM3 SOM4 CO2 NH3
+  -AXIS_TITLES Time(y) SOM2(mM) SOM3(mM) SOM4(mM) CO2(mM) NH3(mM)
+  -INITIAL_SOLUTIONS FALSE
+  -START
+    10 GRAPH_X SIM_TIME/3600.0 / 24.0 / 365.0
+    20 GRAPH_Y KIN('SOM2') KIN('SOM3')*1000.0 KIN('SOM4') * 1000.0  TOT('C(4)')*1000.0 TOT('N(-3)')*1000.0 
+  -END
+
+SELECTED_OUTPUT
+  -file ex4som2.txt
+  -reset false
+
+USER_PUNCH
+  -START
+  -HEADING Time(y) SOM2(mM) SOM3(mM) SOM4(mM) CO2(mM) NH3(mM)
+    10 PUNCH SIM_TIME / 3600.0 / 24.0 / 365.0
+    15 PUNCH KIN('SOM2') * 1000.0 
+    20 PUNCH KIN('SOM3') * 1000.0 
+    25 PUNCH KIN('SOM4') * 1000.0 
+    30 PUNCH TOT('C(4)') * 1000.0
+    40 PUNCH TOT('N(-3)') * 1000.0
+  -END
+END
+
+

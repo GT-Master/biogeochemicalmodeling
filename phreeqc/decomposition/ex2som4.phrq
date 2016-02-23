@@ -1,6 +1,10 @@
 TITLE 1 mM SOM4 first order decay 
-      CLM-CN SOM4 -> CO2 + 0.08575 NH3
-      CN ratio for SOM4 is 10 gC/gN * 12.0111 / 14.0067 = 0.08575       
+      CLM-CN SOM4 -> CO2 + 0.0857525327 NH3
+      CN ratio (gC/gN)  10
+      NC ratio (moleC/moleN)
+      1 mole C : NC mole N = 12.0111 gC : NC*14.0067 gN = CN : 1 
+      NC = 12.0111 / 14.0067 / CN = 0.857525327 / CN
+      NC for SOM4 is 0.0857525327 
 RATES
 
   SOM4
@@ -18,7 +22,7 @@ KINETICS
   SOM4
     -M0 1.0e-3                                 # initial concentration 1 mmol/L
     -PARMS 27.4                                # turnover time 27.4 y
-    -FORMULA CO2 1.0 NH4 0.085714 OH 0.085714     
+    -FORMULA CO2 1.0 NH4 0.0857525327 OH 0.0857525327     
 
   -STEPS 3.1536e9 IN 100 STEPS                 # 100 * 365 * 24 * 3600 = 3.1536e-9 s
 

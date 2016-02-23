@@ -1,8 +1,8 @@
 TITLE 1 mM SOM3 decay in CLM-CN reactin network 
-      SOM3 -> 0.55 CO2 + 0.45 SOM4 + 0.04716 NH3  
-      SOM4 -> CO2 + 0.08575 NH3
-      CN ratio for SOM3 is 10 gC/gN * 12.0111 / 14.0067 = 0.08575       
-      Stoich coefficient for NH3 is 0.08575 * 0.55 = 0.04716
+      SOM3 -> 0.55 CO2 + 0.45 SOM4 + 0.0471642985 NH3  
+      SOM4 -> CO2 + 0.0857525327 NH3
+      NC 0.0857525327 for SOM3 and SOM4      
+      Stoich coefficient for NH3 is 0.0857525327 * 0.55 = 0.0471642985
       SOM3 turnover time is 2 year 
 RATES
 
@@ -38,11 +38,11 @@ KINETICS
   SOM3
     -M0 1.0e-3                                 # initial concentration 1 mmol/L
     -PARMS 2.0 0.55                            # turnover time 2 y, respiration factor 0.55
-    -FORMULA CO2 0.55 NH4 0.04716 OH 0.04716     
+    -FORMULA CO2 0.55 NH4 0.0471642985 OH 0.0471642985     
 
   SOM4_decomposition
     -PARMS 27.4                                # turnover time 27.4 y
-    -FORMULA CO2 1.0 NH4 0.085714 OH 0.085714     
+    -FORMULA CO2 1.0 NH4 0.0857525327 OH 0.0857525327     
 
   SOM4
     -M0 1.0e-15
