@@ -1309,8 +1309,7 @@ FeRd
 
 FeRb
  -start
-  5 ft = ft * CALC_VALUE("fpH")
- 10 rate = ft * get(2) + get(3) + get(4) 
+ 10 rate = get(2) + get(3) + get(4) 
  20 save rate * time
  -end
 
@@ -1334,7 +1333,8 @@ MeGAk
 
 MeGAd
  -start
- 10 rate = parm(1) * (kin("MeGAb") - m0)
+  5 ft = CALC_VALUE("fpH")
+ 10 rate = ft * parm(1) * (kin("MeGAb") - m0)
  15 put(rate, 6)
  20 save rate * time
  -end
@@ -1361,7 +1361,8 @@ MeGHk
 
 MeGHd
  -start
- 10 rate = parm(1) * (kin("MeGHb") - m0)
+  5 ft = CALC_VALUE("fpH")
+ 10 rate = ft * parm(1) * (kin("MeGHb") - m0)
  15 put(rate, 8)
  20 save rate * time
  -end
@@ -1374,8 +1375,9 @@ MeGHb
 
 SOM1
  -start
+ 10 k0   = parm(1)
  20 ft = CALC_VALUE("fpH")
- 30 rate = ft * parm(1) * (m - 1.0e-15)
+ 30 rate = ft * k0 * (m - 1.0e-15)
  40 put(rate, 11)
  45 rate = rate - (get(4) + get(6) + get(8)) * parm(2)
  50 save rate * time
@@ -1383,8 +1385,9 @@ SOM1
 
 SOM2
  -start
+ 10 k0   = parm(1)
  20 ft = CALC_VALUE("fpH")
- 30 rate = ft * parm(2) * (m - 1.0e-15)
+ 30 rate = ft * k0 * (m - 1.0e-15)
  40 put(rate, 12)
  45 rate = rate - (get(4) + get(6) + get(8)) * parm(2)
  50 save (rate - get(11)* (1.0 - 0.28))* time
@@ -1392,8 +1395,9 @@ SOM2
 
 SOM3
  -start
+ 10 k0   = parm(1)
  20 ft = CALC_VALUE("fpH")
- 30 rate = ft * parm(1) * (m - 1.0e-15)
+ 30 rate = ft * k0 * (m - 1.0e-15)
  40 put(rate, 13)
  45 rate = rate - (get(4) + get(6) + get(8)) * parm(2)
  50 save (rate - get(12)* (1.0 - 0.46))* time
@@ -1401,8 +1405,9 @@ SOM3
 
 SOM4
  -start
+ 10 k0   = parm(1)
  20 ft = CALC_VALUE("fpH")
- 30 rate = ft * parm(1) * (m - 1.0e-15)
+ 30 rate = ft * k0 * (m - 1.0e-15)
  40 put(rate, 14)
  45 rate = rate - (get(4) + get(6) + get(8)) * parm(2)
  50 save (rate - get(13)* (1.0 - 0.55))* time
@@ -1410,9 +1415,8 @@ SOM4
 
 Respiration
  -start
- 10 ft = CALC_VALUE("fpH")
  20 rate = get(11) * 0.28 + get(12) * 0.46 + get(13)* 0.55 + get(14)
- 30 save -ft * rate * time
+ 30 save -rate * time
  -end
 
 Fermentation
