@@ -1,0 +1,54 @@
+
+DATABASE ../forward/database/redox_ph.dat
+
+TITLE simulate CO2 and CH4 production from microcosm tests
+
+CALCULATE_VALUES
+ fpH
+ -start
+ 10 fpH   = 1.0
+ 20 pHmin = 3.0
+ 30 pHopt = 7.0
+ 40 pHmax = 11.0
+ 50 pH = -la("H+")
+ 60 tmp = (pH - pHmin) * (pH - pHmax)
+ 70 fpH = tmp / (tmp - (pH - pHopt)*(pH - pHopt))
+ 80 SAVE fpH
+ -end
+
+SOLUTION 1
+Acetate 1.0
+Na      1.0 charge
+END
+
+USE SOLUTION 1
+ 
+KINETICS
+  -cvode
+  SOM4
+    -m0  1.0
+    -formula CH2O 0.0
+    -parms  1.157E-09 0.10
+
+  Respiration
+    -formula CO2 -0.900 Glucose -0.0166666666667
+
+  -steps 5.616e9 in 5616 steps
+
+INCREMENTAL_REACTIONS true
+PRINT
+  -reset false
+SELECTED_OUTPUT
+  -RESET false
+  -FILE ex2som4pH.txt
+USER_PUNCH
+  -start
+  -heading Time(y) SOM4 CO2 Glucose pH fpH
+  10 PUNCH SIM_TIME / 86400.0/365.0
+  20 PUNCH kin('SOM4')
+  30 PUNCH tot('C(4)')
+  40 PUNCH tot('Glucose')
+  50 PUNCH -la("H+") 
+  60 PUNCH CALC_VALUE("fpH")
+  -end
+END
