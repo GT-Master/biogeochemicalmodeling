@@ -19,7 +19,7 @@ def writephrq(prefix, temperature, \
   tmf = math.exp(308.56*(1.0/71.02-1.0/(273.15 + temperature - 227.13))) 
   
   prefix_solution = """
-DATABASE redox.dat
+DATABASE ../database/redox.dat
 
 TITLE simulate CO2 and CH4 production from microcosm tests
 
@@ -45,7 +45,7 @@ SOLUTION 1
   Na          1.0
   Cl          1.0 charge
   Hzero       1.0e-10
-  Nzero       1.0e-10
+  Nzero       1.0 redoxN2(g) 0.0
   Ferric      1e-20 redoxFe(OH)3(a) 0.0
   Methane     1.0e-10
   Amm         1.0e-3

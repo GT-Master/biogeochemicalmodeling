@@ -1,5 +1,5 @@
 
-DATABASE ../redox.dat
+DATABASE ../forward/database/redox.dat
 
 TITLE simulate CO2 and CH4 production from microcosm tests
 
