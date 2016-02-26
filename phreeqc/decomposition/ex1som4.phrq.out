@@ -1,0 +1,44 @@
+   Input file: ex1som4.phrq
+  Output file: ex1som4.phrq.out
+Database file: /Applications/phreeqc-3.3.3-10424/database/phreeqc.dat
+
+------------------
+Reading data base.
+------------------
+
+	SOLUTION_MASTER_SPECIES
+	SOLUTION_SPECIES
+	PHASES
+	EXCHANGE_MASTER_SPECIES
+	EXCHANGE_SPECIES
+	SURFACE_MASTER_SPECIES
+	SURFACE_SPECIES
+	RATES
+	END
+------------------------------------
+Reading input data for simulation 1.
+------------------------------------
+
+	TITLE 1 mM SOM4 first order decay 
+	      CLM-CN SOM4 -> turnover time 27.4 year
+	RATES
+	  SOM4
+	    start
+	      10 k     = 1.0/27.4/365.0/24.0/3600.0   # rate coefficient
+	      20 rate  = k * (m - 1.0e-15) 
+	      30 moles = rate * TIME
+	      40 SAVE moles
+	    end
+	SOLUTION 1
+	KINETICS
+	  SOM4
+	    m0 1.0e-3                                 # initial concentration 1 mmol/L
+	    formula C 0.0    
+	  steps 3.1536e9 IN 100 STEPS                 # 100 * 365 * 24 * 3600 = 3.1536e-9 s
+	  INCREMENTAL_REACTIONS TRUE
+	PRINT
+	  reset FALSE
+----------------------------------
+End of Run after 0.032268 Seconds.
+----------------------------------
+
