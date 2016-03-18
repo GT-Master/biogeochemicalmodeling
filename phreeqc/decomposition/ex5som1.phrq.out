@@ -1,0 +1,113 @@
+   Input file: ex5som1.phrq
+  Output file: ex5som1.phrq.out
+Database file: /Applications/phreeqc-3.3.3-10424/database/phreeqc.dat
+
+------------------
+Reading data base.
+------------------
+
+	SOLUTION_MASTER_SPECIES
+	SOLUTION_SPECIES
+	PHASES
+	EXCHANGE_MASTER_SPECIES
+	EXCHANGE_SPECIES
+	SURFACE_MASTER_SPECIES
+	SURFACE_SPECIES
+	RATES
+	END
+------------------------------------
+Reading input data for simulation 1.
+------------------------------------
+
+	TITLE 1 mM SOM1 decay in CLM-CN reactin network 
+	           CN     NC    turnover rate constant (s^-1)
+	      SOM1 12  0.07146  14.0 d   8.267e-7  
+	      SOM2 12  0.07146  71.0 d   1.630e-7  
+	      SOM3 10  0.08575   2.0 y   1.586e-8  
+	      SOM4 10  0.08575  27.4 y   1.157e-9  
+	      SOM1 -> 0.28 CO2 + 0.72 SOM2 +  
+	      SOM2 -> 0.46 CO2 + 0.54 SOM3 + 0.025155 NH3  
+	      SOM3 -> 0.55 CO2 + 0.45 SOM4 + 0.04716 NH3  
+	      SOM4 -> CO2 + 0.08575 NH3
+	RATES
+	  SOM1
+	    start
+	      20 rate  = parm(1) * (m - 1.0e-15) 
+	      30 moles = rate * TIME
+	      40 SAVE moles
+	      50 som2production = moles * (1.0 - PARM(2))
+	      60 PUT(som2production, 1)
+	    end
+	  SOM2_decomposition
+	    start
+	      20 rate  = parm(1) * (KIN('SOM2') - 1.0e-15) 
+	      30 moles = rate * TIME
+	      35 PUT(moles, 2)
+	      40 SAVE moles
+	      50 som3production = moles * (1.0 - PARM(2))
+	      60 PUT(som3production, 3)
+	    end
+	  SOM2
+	    start
+	      10 moles = GET(2) - GET(1) 
+	      20 SAVE moles
+	    end
+	  SOM3_decomposition
+	    start
+	      20 rate  = parm(1) * (KIN('SOM3') - 1.0e-15) 
+	      30 moles = rate * TIME
+	      35 PUT(moles, 4)
+	      40 SAVE moles
+	      50 som4production = moles * (1.0 - PARM(2))
+	      60 PUT(som4production, 5)
+	    end
+	  SOM3
+	    start
+	      10 moles = GET(4) - GET(3) 
+	      20 SAVE moles
+	    end
+	  SOM4_decomposition
+	    start
+	      10 k     = PARM(1)
+	      20 rate  = k * (KIN('SOM4') - 1.0e-15) 
+	      30 moles = rate * TIME
+	      40 SAVE moles
+	      50 PUT(moles, 6)
+	    end
+	  SOM4
+	    start
+	      10 moles = GET(6) - GET(5) 
+	      20 SAVE moles
+	    end
+	SOLUTION 1
+	KINETICS
+	  SOM1
+	    m0 1.0e-3                                 # initial concentration 1 mmol/L
+	    parms 8.267e-7 0.28                       # turnover time 14 d, respiration factor 0.28
+	    formula CO2 0.28 NH3 0.02     
+	  SOM2_decomposition
+	    parms 1.630e-7  0.46                      # turnover time 71 d, respiration factor 0.46
+	    formula CO2 0.46 NH3 0.02515     
+	  SOM2
+	    m0 1.0e-15
+	    formula CO2 0.0
+	  SOM3_decomposition
+	    parms 1.586e-8 0.55                       # turnover time 2 y, respiration factor 0.55
+	    formula CO2 0.55 NH3 0.04716     
+	  SOM3
+	    m0 1.0e-15
+	    formula CO2 0.0
+	  SOM4_decomposition
+	    parms 1.157e-9                            # turnover time 27.4 y
+	    formula CO2 1.0 NH3 0.08575     
+	  SOM4
+	    m0 1.0e-15
+	    formula CO2 0.0
+	  steps 3.1536e7 IN 200 STEPS                 # 1 * 365 * 24 * 3600 = 3.1536e-7 s
+	  INCREMENTAL_REACTIONS TRUE
+	PRINT
+	  reset FALSE
+----------------------------------
+End of Run after 0.138112 Seconds.
+----------------------------------
+

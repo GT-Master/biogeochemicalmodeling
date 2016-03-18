@@ -1,0 +1,50 @@
+   Input file: ex2som4.phrq
+  Output file: ex2som4.phrq.out
+Database file: /Applications/phreeqc-3.3.3-10424/database/phreeqc.dat
+
+------------------
+Reading data base.
+------------------
+
+	SOLUTION_MASTER_SPECIES
+	SOLUTION_SPECIES
+	PHASES
+	EXCHANGE_MASTER_SPECIES
+	EXCHANGE_SPECIES
+	SURFACE_MASTER_SPECIES
+	SURFACE_SPECIES
+	RATES
+	END
+------------------------------------
+Reading input data for simulation 1.
+------------------------------------
+
+	TITLE 1 mM SOM4 first order decay 
+	      CLM-CN SOM4 -> CO2 + 0.0857525327 NH3
+	      CN ratio (gC/gN)  10
+	      NC ratio (moleC/moleN)
+	      1 mole C : NC mole N = 12.0111 gC : NC*14.0067 gN = CN : 1 
+	      NC = 12.0111 / 14.0067 / CN = 0.857525327 / CN
+	      NC for SOM4 is 0.0857525327 
+	RATES
+	  SOM4
+	    start
+	      10 k     = 1.0/PARM(1)/365.0/24.0/3600.0   # rate coefficient
+	      20 rate  = k * m 
+	      30 moles = rate * TIME
+	      40 SAVE moles
+	    end
+	SOLUTION 1
+	KINETICS
+	  SOM4
+	    m0 1.0e-3                                 # initial concentration 1 mmol/L
+	    parms 27.4                                # turnover time 27.4 y
+	    formula CO2 1.0 NH4 0.0857525327 OH 0.0857525327     
+	  steps 3.1536e9 IN 100 STEPS                 # 100 * 365 * 24 * 3600 = 3.1536e-9 s
+	  INCREMENTAL_REACTIONS TRUE
+	PRINT
+	  reset FALSE
+----------------------------------
+End of Run after 0.085497 Seconds.
+----------------------------------
+
